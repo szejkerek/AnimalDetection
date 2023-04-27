@@ -278,7 +278,7 @@ valid_epoch = smp.utils.train.ValidEpoch(
     verbose=True,
 )
 
-# Lets look at data we have
+# Let's look at data we have
 dataset = Dataset(x_train_dir, y_train_dir,
                   classes=['animal', 'maskingbackground', 'nonmaskingbackground', 'nonmaskingforegroundattention',
                            'unlabelled'])
