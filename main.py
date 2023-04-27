@@ -1,3 +1,5 @@
+from multiprocessing import freeze_support
+
 from torch.utils.data import DataLoader
 from torch.utils.data import Dataset as BaseDataset
 import numpy as np
@@ -7,9 +9,10 @@ import albumentations as albu
 import torch
 import segmentation_models_pytorch as smp
 import ssl
-import segmentation_models_pytorch.utils.metrics as smpu
 import os
+from multiprocessing import freeze_support
 
+freeze_support()
 os.environ['CUDA_VISIBLE_DEVICES'] = '0'
 ssl._create_default_https_context = ssl._create_unverified_context
 DATA_DIR = './data'
@@ -214,10 +217,10 @@ def get_preprocessing(preprocessing_fn):
     return albu.Compose(_transform)
 
 
-ENCODER = 'vgg16'
+ENCODER = 'resnet34'
 ENCODER_WEIGHTS = 'imagenet'
 CLASSES = ['animal', 'maskingbackground', 'nonmaskingbackground', 'nonmaskingforegroundattention', 'unlabelled']
-ACTIVATION = 'softmax'
+ACTIVATION = 'softmax2d'
 DEVICE = 'cuda'
 
 model = smp.Unet(
@@ -246,17 +249,21 @@ valid_dataset = Dataset(
     classes=CLASSES,
 )
 
-train_loader = DataLoader(train_dataset, batch_size=5, shuffle=True, num_workers=12)
-valid_loader = DataLoader(valid_dataset, batch_size=1, shuffle=False, num_workers=1)
+train_loader = DataLoader(train_dataset, batch_size=5, shuffle=True, num_workers=0)
+valid_loader = DataLoader(valid_dataset, batch_size=1, shuffle=False, num_workers=0)
 
 lossWeights = torch.tensor([0.6, 0.1, 0.1, 0.1, 0.1])
-loss = smp.utils.losses.CrossEntropyLoss()
+loss = smp.utils.losses.DiceLoss()
 metrics = [
-    smpu.IoU(threshold=0.6),
+    smp.utils.metrics.IoU(threshold=0.5),
+    smp.utils.metrics.Fscore(threshold=0.5),
+    smp.utils.metrics.Accuracy(threshold=0.5),
+    smp.utils.metrics.Recall(threshold=0.5),
+    smp.utils.metrics.Precision(threshold=0.5),
 ]
 
 optimizer = torch.optim.Adam([
-    dict(params=model.parameters(), lr=0.0001),
+    dict(params=model.parameters(), lr=0.006),
 ])
 
 # create epoch runners
