@@ -1,6 +1,9 @@
 import config
 import segmentation_models_pytorch as smp
 
+from data_model import test_dataloader
+from utils import load_model
+
 train_epoch = smp.utils.train.TrainEpoch(
     config.model,
     loss=config.loss,
@@ -18,9 +21,14 @@ valid_epoch = smp.utils.train.ValidEpoch(
     verbose=True,
 )
 
-test_epoch = smp.utils.train.ValidEpoch(
-    model=config.get_best_model(),
-    loss=config.loss,
-    metrics=config.metrics,
-    device=config.DEVICE,
-)
+
+def evaluate_test_data():
+    test_epoch = smp.utils.train.ValidEpoch(
+        model=load_model(),
+        loss=config.loss,
+        metrics=config.metrics,
+        device=config.DEVICE,
+    )
+    # evaluate model on test data
+    test_logs = test_epoch.run(test_dataloader)
+    return test_logs

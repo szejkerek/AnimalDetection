@@ -85,5 +85,3 @@ class Dataset(BaseDataset):
 
     def __len__(self):
         return len(self.ids)
-
-
