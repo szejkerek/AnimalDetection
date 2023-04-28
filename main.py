@@ -1,16 +1,13 @@
-from torch.utils.data import DataLoader
 import torch
-import ssl
-import os
-from multiprocessing import freeze_support
 import data_model
 import config
 import utils
 
-config.CURRENT_PATH = utils.create_current_folder()
-freeze_support()
-os.environ['CUDA_VISIBLE_DEVICES'] = '0'
-ssl._create_default_https_context = ssl._create_unverified_context
+if not utils.continue_training(enabled=False):
+    print("Starting new training routine...")
+    config.CURRENT_PATH = utils.create_current_folder()
+
+utils.setup_env()
 
 for i in range(1):
     image, mask = data_model.train_visualize[i]  # get some sample
@@ -22,11 +19,9 @@ for i in range(1):
         nonmaskingforegroundattention=mask[..., 3].squeeze(),
     )
 
-# train model for 40 epochs
-
 max_score = 0
 
-for i in range(0, 50):
+for i in range(0, 1):
     print('\nEpoch: {}'.format(i))
     train_logs = data_model.train_epoch.run(data_model.train_loader)
     valid_logs = data_model.valid_epoch.run(data_model.valid_loader)

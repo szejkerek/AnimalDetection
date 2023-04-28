@@ -1,9 +1,17 @@
 import numpy as np
+import ssl
 import os
+from multiprocessing import freeze_support
 import datetime
 import torch
 
 import config
+
+
+def setup_env():
+    freeze_support()
+    os.environ['CUDA_VISIBLE_DEVICES'] = '0'
+    ssl._create_default_https_context = ssl._create_unverified_context
 
 
 def create_current_folder():
@@ -50,3 +58,32 @@ def save_model():
 
 def load_model():
     return torch.load(os.path.join(config.CURRENT_PATH, "model.pth"))
+
+
+def continue_training(date="xd", enabled=False):
+    if not enabled:
+        return False
+
+    root_dir = os.getcwd()
+    results_dir = os.path.join(root_dir, "!Results")
+    if not os.path.exists(results_dir):
+        print("Results folder does not exists")
+        return False
+
+    subfolder_name = date
+    subfolder_dir = os.path.join(results_dir, subfolder_name)
+    if not os.path.exists(subfolder_dir):
+        print("Subfolder: " + date + " does not exists")
+        return False
+
+    model_path = os.path.join(subfolder_dir, "model.pth")
+    if not os.path.exists(model_path):
+        print("Couldnt locate \"model.pth\" under path: " + model_path)
+        return False
+
+    config.model = torch.load(model_path)
+    config.CURRENT_PATH = subfolder_dir
+
+    print("##############################")
+    print("#      RETRAINING MODEL      #")
+    print("##############################")
