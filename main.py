@@ -21,7 +21,7 @@ for i in range(1):
 
 max_score = 0
 
-for i in range(0, 1):
+for i in range(0, 10):
     print('\nEpoch: {}'.format(i))
     train_logs = data_model.train_epoch.run(data_model.train_loader)
     valid_logs = data_model.valid_epoch.run(data_model.valid_loader)
@@ -44,7 +44,7 @@ for i in range(3):
     gt_mask = gt_mask.squeeze()
 
     x_tensor = torch.from_numpy(image).to(config.DEVICE).unsqueeze(0)
-    pr_mask = utils.load_model().predict(x_tensor)
+    pr_mask = config.model.predict(x_tensor)
     pr_mask = (pr_mask.squeeze().cpu().numpy().round())
 
     utils.visualize(

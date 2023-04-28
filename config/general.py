@@ -2,7 +2,7 @@ import os
 import utils
 
 CURRENT_PATH = ""
-IS_MODEL_SAVED = True
+IS_MODEL_SAVED = False
 
 CLASSES = ['animal', 'maskingbackground', 'nonmaskingbackground', 'nonmaskingforegroundattention']
 COLORS = [(0, 0, 255), (0, 255, 0), (255, 0, 0), (255, 255, 255)]

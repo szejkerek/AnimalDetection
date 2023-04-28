@@ -23,8 +23,9 @@ valid_epoch = smp.utils.train.ValidEpoch(
 
 
 def evaluate_test_data():
+    print("Evaluate model on test dataset:")
     test_epoch = smp.utils.train.ValidEpoch(
-        model=load_model(),
+        model=config.model,
         loss=config.loss,
         metrics=config.metrics,
         device=config.DEVICE,
