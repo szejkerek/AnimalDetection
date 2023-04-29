@@ -3,8 +3,10 @@ import os
 import matplotlib.pyplot as plt
 import numpy as np
 from PIL import Image
+
 import config
-import data_model
+import utils
+from utils import config_line
 
 
 def visualize(**images):
@@ -18,15 +20,12 @@ def visualize(**images):
         plt.imshow(image)
     plt.show()
 
-
-def save_visualization(dataset, enabled=False):
+def save_visualization(dataset, folder_name, enabled=False):
     if (enabled == False):
         return
+    utils.create_subfolder_in_date_folder("vizualization_of_data_set")
+    utils.create_subfolder_in_date_folder("vizualization_of_data_set\\"+folder_name)
     images_count = len(dataset)
-
-
-
-
     for n in range(images_count):
         image, mask = dataset[n]
 
@@ -47,4 +46,6 @@ def save_visualization(dataset, enabled=False):
         new_image.paste(masking_background, (normal_image.width, int(normal_image.height/2)))
         new_image.paste(nonmasking_background, (int(normal_image.width + normal_image.width/2), int(normal_image.height/2)))
 
-        new_image.save(os.path.join(config.CURRENT_PATH, 'merged_image'+str(n)+'.png'))
+        path = os.path.join(config.CURRENT_PATH, os.path.join("vizualization_of_data_set", os.path.join(folder_name, 'merged_image' + str(n) + '.png')))
+        new_image.save(path)
+

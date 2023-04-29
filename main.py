@@ -9,9 +9,9 @@ if not utils.continue_training(enabled=False):
 
 utils.setup_env()
 
-#utils.save_visualization(data_model.train_visualize, enabled=True)
-#utils.save_visualization(data_model.valid_visualize, enabled=True)
-#utils.save_visualization(data_model.test_visualize, enabled=True)
+#utils.save_visualization(data_model.train_visualize, "Train", enabled=True)
+#utils.save_visualization(data_model.valid_visualize, "Valid", enabled=True)
+#utils.save_visualization(data_model.test_visualize, "Test", enabled=True)
 
 max_score = 0
 for i in range(0, 10):

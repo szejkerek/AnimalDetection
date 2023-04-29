@@ -12,6 +12,7 @@ def setup_env():
     freeze_support()
     os.environ['CUDA_VISIBLE_DEVICES'] = '0'
     ssl._create_default_https_context = ssl._create_unverified_context
+    config.save_config(config.CURRENT_PATH)
 
 
 def create_current_folder():
@@ -87,3 +88,14 @@ def continue_training(date="", enabled=False):
     print("##############################")
     print("#      RETRAINING MODEL      #")
     print("##############################")
+
+
+def create_subfolder_in_date_folder(name):
+    folder = config.CURRENT_PATH
+    folder = os.path.join(folder, name)
+    if not os.path.exists(folder):
+        os.makedirs(folder)
+
+
+def config_line(param, value):
+    return str(str(param) + " = " + str(value) + "\n")
