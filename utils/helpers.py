@@ -60,7 +60,7 @@ def load_model():
     return torch.load(os.path.join(config.CURRENT_PATH, "model.pth"))
 
 
-def continue_training(date="xd", enabled=False):
+def continue_training(date="", enabled=False):
     if not enabled:
         return False
 

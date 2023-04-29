@@ -9,18 +9,11 @@ if not utils.continue_training(enabled=False):
 
 utils.setup_env()
 
-for i in range(1):
-    image, mask = data_model.train_visualize[i]  # get some sample
-    utils.visualize(
-        image=image,
-        animals=mask[..., 0].squeeze(),
-        maskingbackground=mask[..., 1].squeeze(),
-        nonmaskingbackground=mask[..., 2].squeeze(),
-        nonmaskingforegroundattention=mask[..., 3].squeeze(),
-    )
+#utils.save_visualization(data_model.train_visualize, enabled=True)
+#utils.save_visualization(data_model.valid_visualize, enabled=True)
+#utils.save_visualization(data_model.test_visualize, enabled=True)
 
 max_score = 0
-
 for i in range(0, 10):
     print('\nEpoch: {}'.format(i))
     train_logs = data_model.train_epoch.run(data_model.train_loader)
@@ -37,7 +30,7 @@ for i in range(0, 10):
 
 test_log = data_model.evaluate_test_data()
 
-for i in range(3):
+for i in range(0):
     image_vis = data_model.test_visualize[i][0].astype('uint8')
     image, gt_mask = data_model.test_dataset[i]
 
