@@ -19,3 +19,5 @@ x_test_dir = os.path.join(DATA_DIR, 'GDTest/Images')
 y_test_dir = os.path.join(DATA_DIR, 'GDTest/Masks')
 
 DEVICE = 'cuda'
+
+INTERRUPT_KEY = 'esc'

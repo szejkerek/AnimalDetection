@@ -1,3 +1,4 @@
+import keyboard as keyboard
 import torch
 import data_model
 import config
@@ -9,17 +10,21 @@ if not utils.continue_training(enabled=False):
 
 utils.setup_env()
 
-#utils.save_visualization(data_model.train_visualize, "Train", enabled=True)
-#utils.save_visualization(data_model.valid_visualize, "Valid", enabled=True)
-#utils.save_visualization(data_model.test_visualize, "Test", enabled=True)
+# utils.save_visualization(data_model.train_visualize, "Train", enabled=True)
+# utils.save_visualization(data_model.valid_visualize, "Valid", enabled=True)
+# utils.save_visualization(data_model.test_visualize, "Test", enabled=True)
 
 max_score = 0
 for i in range(0, 10):
+    # Key must be hold at the start of loop cycle
+    if keyboard.is_pressed(config.INTERRUPT_KEY):
+        print("Learning interrupted by user.")
+        break
+
     print('\nEpoch: {}'.format(i))
     train_logs = data_model.train_epoch.run(data_model.train_loader)
     valid_logs = data_model.valid_epoch.run(data_model.valid_loader)
 
-    # do something (save model, change lr, etc.)
     if max_score < valid_logs['iou_score']:
         max_score = valid_logs['iou_score']
         utils.save_model()
