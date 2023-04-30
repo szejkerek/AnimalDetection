@@ -1,12 +1,10 @@
 import datetime
 import time
-
 import keyboard as keyboard
-import torch
-
 import config
 import data_model
 import utils
+from utils import save_results
 
 if not utils.continue_training(enabled=False):
     print("Starting new training routine...")
@@ -51,21 +49,4 @@ config.ELAPSED_TIME = end_time - start_time
 formatted_time = str(datetime.timedelta(seconds=config.ELAPSED_TIME)).split(".")[0]
 print("Time of learning", formatted_time)
 
-for i in range(0):
-    image_vis = data_model.test_visualize[i][0].astype('uint8')
-    image, gt_mask = data_model.test_dataset[i]
-
-    gt_mask = gt_mask.squeeze()
-
-    x_tensor = torch.from_numpy(image).to(config.DEVICE).unsqueeze(0)
-    pr_mask = config.model.predict(x_tensor)
-    pr_mask = (pr_mask.squeeze().cpu().numpy().round())
-
-    utils.visualize(
-        image=image_vis,
-        ground_truth_mask=gt_mask[0, ...].squeeze(),
-        animal=pr_mask[0, ...].squeeze(),
-        masking=pr_mask[1, ...].squeeze(),
-        nonmasking=pr_mask[2, ...].squeeze(),
-        attention=pr_mask[3, ...].squeeze(),
-    )
+save_results(data_model.test_visualize, data_model.test_dataset, count=1)

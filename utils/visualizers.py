@@ -1,9 +1,11 @@
 import os
 import matplotlib.pyplot as plt
 import numpy as np
+import torch
 from PIL import Image
 import config
 import utils
+from utils import get_non_repeating_numbers
 
 
 def visualize(**images):
@@ -114,3 +116,24 @@ def update_plot(train_logs, valid_logs, test_log, enabled=True):
     plt.pause(5)
     plt.tight_layout()
     plt.savefig(os.path.join(config.CURRENT_PATH, "fig.png"))
+
+
+def save_results(test_visualize, test_dataset, count=10):
+    for i in get_non_repeating_numbers(len(test_dataset), count):
+        image_vis = test_visualize[i][0].astype('uint8')
+        image, gt_mask = test_dataset[i]
+
+        gt_mask = gt_mask.squeeze()
+
+        x_tensor = torch.from_numpy(image).to(config.DEVICE).unsqueeze(0)
+        pr_mask = config.model.predict(x_tensor)
+        pr_mask = (pr_mask.squeeze().cpu().numpy().round())
+
+        utils.visualize(
+            image=image_vis,
+            ground_truth_mask=gt_mask[0, ...].squeeze(),
+            animal=pr_mask[0, ...].squeeze(),
+            masking=pr_mask[1, ...].squeeze(),
+            nonmasking=pr_mask[2, ...].squeeze(),
+            attention=pr_mask[3, ...].squeeze(),
+        )

@@ -1,3 +1,5 @@
+import random
+
 import numpy as np
 import ssl
 import os
@@ -98,3 +100,11 @@ def create_subfolder_in_date_folder(name):
 
 def config_line(param, value):
     return str(str(param) + " = " + str(value) + "\n")
+
+
+def get_non_repeating_numbers(test_count, amount_of_numbers):
+    if amount_of_numbers > test_count or amount_of_numbers < 0:
+        amount_of_numbers = test_count
+
+    random_numbers = random.sample(range(test_count), amount_of_numbers)
+    return random_numbers
