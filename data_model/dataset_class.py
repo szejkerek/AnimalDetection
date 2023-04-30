@@ -40,7 +40,6 @@ class Dataset(BaseDataset):
         self.preprocessing = preprocessing
 
     def __getitem__(self, i):
-
         # read data
         image = cv2.imread(self.images_fps[i])
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
