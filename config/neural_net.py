@@ -3,6 +3,7 @@ import os
 import segmentation_models_pytorch as smp
 import torch
 
+import config
 from config import CLASSES
 from utils import config_line
 
@@ -19,7 +20,7 @@ model = smp.Unet(
     activation=ACTIVATION,
 )
 
-loss = smp.utils.losses.DiceLoss()
+loss = smp.utils.losses.CrossEntropyLoss(weight=config.WEIGHTS)
 
 metrics = [
     smp.utils.metrics.IoU(threshold=0.5),
@@ -41,7 +42,7 @@ def calculate_score(logs):
 
 
 def calculate_loss(logs):
-    return logs['dice_loss']
+    return logs['cross_entropy_loss']
 
 
 def save_config(current_path=""):
@@ -60,3 +61,4 @@ def save_config(current_path=""):
         f.write(config_line("Metric" + str(i) + "_threshold", metrics[i].threshold))
 
     f.close()
+
