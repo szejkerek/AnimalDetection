@@ -17,11 +17,12 @@ def visualize(**images):
         plt.imshow(image)
     plt.show()
 
+
 def save_visualization(dataset, folder_name, enabled=False):
     if (enabled == False):
         return
     utils.create_subfolder_in_date_folder("vizualization_of_data_set")
-    utils.create_subfolder_in_date_folder("vizualization_of_data_set\\"+folder_name)
+    utils.create_subfolder_in_date_folder("vizualization_of_data_set\\" + folder_name)
     images_count = len(dataset)
     for n in range(images_count):
         image, mask = dataset[n]
@@ -38,11 +39,78 @@ def save_visualization(dataset, folder_name, enabled=False):
         new_image.paste(normal_image, (0, 0))
 
         new_image.paste(animals, (normal_image.width, 0))
-        new_image.paste(foreground_attention, (int(normal_image.width + normal_image.width/2), 0))
+        new_image.paste(foreground_attention, (int(normal_image.width + normal_image.width / 2), 0))
 
-        new_image.paste(masking_background, (normal_image.width, int(normal_image.height/2)))
-        new_image.paste(nonmasking_background, (int(normal_image.width + normal_image.width/2), int(normal_image.height/2)))
+        new_image.paste(masking_background, (normal_image.width, int(normal_image.height / 2)))
+        new_image.paste(nonmasking_background,
+                        (int(normal_image.width + normal_image.width / 2), int(normal_image.height / 2)))
 
-        path = os.path.join(config.CURRENT_PATH, os.path.join("vizualization_of_data_set", os.path.join(folder_name, 'merged_image' + str(n) + '.png')))
+        path = os.path.join(config.CURRENT_PATH, os.path.join("vizualization_of_data_set", os.path.join(folder_name,
+                                                                                                        'merged_image' + str(
+                                                                                                            n) + '.png')))
         new_image.save(path)
 
+
+train_scores = []
+valid_scores = []
+test_scores = []
+
+train_losses = []
+valid_losses = []
+test_losses = []
+
+first_launch = True
+fig_number = 0
+
+
+def update_plot(train_logs, valid_logs, test_log, enabled=True):
+    if not enabled:
+        return False
+
+    if plt.get_fignums():
+        fig = plt.figure(1, figsize=(16, 8), dpi=80)
+        fig.clf()
+        axs = fig.subplots(1, 2)
+    else:
+        fig, axs = plt.subplots(1, 2, figsize=(16, 8), dpi=80)
+
+    train_score = config.calculate_score(train_logs)
+    valid_score = config.calculate_score(valid_logs)
+    test_score = config.calculate_score(test_log)
+
+    train_loss = config.calculate_loss(train_logs)
+    valid_loss = config.calculate_loss(valid_logs)
+    test_loss = config.calculate_loss(test_log)
+
+    train_scores.append(train_score)
+    valid_scores.append(valid_score)
+    test_scores.append(test_score)
+
+    train_losses.append(train_loss)
+    valid_losses.append(valid_loss)
+    test_losses.append(test_loss)
+
+    axs[0].plot(train_scores, color='blue', label='Train score')
+    axs[0].plot(valid_scores, color='orange', label='Valid score')
+    axs[0].plot(test_scores, color='red', label='Train score')
+    axs[0].set_xlabel('Epoch')
+    axs[0].set_ylabel('Score')
+    axs[0].legend(loc='upper left')
+    axs[0].set_title("Train score: {}\nValid score: {}\nTest score: {}".format(round(train_score, 6),
+                                                                               round(valid_score, 6),
+                                                                               round(test_score, 6)))
+
+    axs[1].plot(train_losses, color='blue', label='Train loss')
+    axs[1].plot(valid_losses, color='orange', label='Valid loss')
+    axs[1].plot(test_losses, color='red', label='Train loss')
+    axs[1].set_xlabel('Epoch')
+    axs[1].set_ylabel('Loss')
+    axs[1].legend(loc='upper right')
+    axs[1].set_title("Train loss: {}\nValid loss: {}\nTest loss: {}".format(round(train_loss, 3),
+                                                                            round(valid_loss, 3),
+                                                                            round(test_loss, 3)))
+
+    fig.canvas.flush_events()
+    plt.pause(5)
+    plt.tight_layout()
+    plt.savefig(os.path.join(config.CURRENT_PATH, "fig.png"))

@@ -36,8 +36,12 @@ optimizer = torch.optim.Adam([
 preprocessing_fn = smp.encoders.get_preprocessing_fn(ENCODER, ENCODER_WEIGHTS)
 
 
-def calculate_score(valid_logs):
-    return valid_logs['iou_score']
+def calculate_score(logs):
+    return logs['iou_score']
+
+
+def calculate_loss(logs):
+    return logs['dice_loss']
 
 
 def save_config(current_path=""):

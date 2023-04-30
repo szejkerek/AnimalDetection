@@ -21,3 +21,4 @@ y_test_dir = os.path.join(DATA_DIR, 'GDTest/Masks')
 DEVICE = 'cuda'
 
 INTERRUPT_KEY = 'esc'
+ELAPSED_TIME = 0

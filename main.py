@@ -1,3 +1,6 @@
+import datetime
+import time
+
 import keyboard as keyboard
 import torch
 
@@ -15,10 +18,9 @@ utils.setup_env()
 # utils.save_visualization(data_model.valid_visualize, "Valid", enabled=True)
 # utils.save_visualization(data_model.test_visualize, "Test", enabled=True)
 
-epoch_nums = []
-iou_scores = []
-
 max_score = 0
+
+start_time = time.time()
 while True:
     # Key must be hold at the start of loop cycle
     if keyboard.is_pressed(config.INTERRUPT_KEY):
@@ -26,25 +28,28 @@ while True:
         break
 
     print('\nEpoch: {}'.format(config.EPOCH_COUNT))
+
     train_logs = data_model.train_epoch.run(data_model.train_loader)
     valid_logs = data_model.valid_epoch.run(data_model.valid_loader)
+    test_log = data_model.evaluate_test_data()
 
-    score = config.calculate_score(valid_logs)
+    learning_score = config.calculate_score(valid_logs)
 
-    epoch_nums.append(config.EPOCH_COUNT)
-    iou_scores.append(score)
+    utils.update_plot(train_logs, valid_logs, test_log, enabled=False)
 
-    if max_score < score:
-        max_score = score
+    if max_score < learning_score:
+        max_score = learning_score
         utils.save_model()
 
     if config.EPOCH_COUNT == 25:
         config.optimizer.param_groups[0]['lr'] = 1e-5
         print('Decrease decoder learning rate to 1e-5!')
-
     config.EPOCH_COUNT += 1
 
-test_log = data_model.evaluate_test_data()
+end_time = time.time()
+config.ELAPSED_TIME = end_time - start_time
+formatted_time = str(datetime.timedelta(seconds=config.ELAPSED_TIME)).split(".")[0]
+print("Time of learning", formatted_time)
 
 for i in range(0):
     image_vis = data_model.test_visualize[i][0].astype('uint8')
