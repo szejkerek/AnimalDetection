@@ -7,7 +7,7 @@ IS_MODEL_SAVED = False
 CLASSES = ['animal', 'maskingbackground', 'nonmaskingbackground', 'nonmaskingforegroundattention']
 COLORS = [(0, 0, 255), (0, 255, 0), (255, 0, 0), (255, 255, 255)]
 
-MY_DATASET = r'.\!Dataset\Dataset1'
+MY_DATASET = r'.\!Dataset\small_dataset'
 
 x_train_dir = os.path.join(MY_DATASET, 'Train\\Images')
 y_train_dir = os.path.join(MY_DATASET, 'Train\\Masks')

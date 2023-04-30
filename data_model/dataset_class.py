@@ -64,10 +64,10 @@ class Dataset(BaseDataset):
         for cls_value in self.class_values:
             color = config.COLORS[cls_value]
             newMask = cv2.inRange(mask, color, color)
+            newMask = np.float32(newMask)
+            newMask = cv2.normalize(newMask, None, alpha=0, beta=1, norm_type=cv2.NORM_MINMAX, dtype=cv2.CV_32F)
             masks.append(newMask)
-
-        mask = np.stack(masks, axis=-1).astype('float')
-
+        mask = np.stack(masks, axis=-1).astype('float32')
         # apply augmentations
         if self.augmentation:
             sample = self.augmentation(image=image, mask=mask)

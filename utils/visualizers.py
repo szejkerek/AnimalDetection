@@ -141,10 +141,10 @@ def save_results(test_visualize, test_dataset, count=10):
 
         # Convert images and masks to PTL images
         normal_image = Image.fromarray(np.uint8(image_vis))
-        gt_animals = Image.fromarray(np.uint8(gt_mask[0, ...].squeeze())).convert('RGB')
-        gt_masking_background = Image.fromarray(np.uint8(gt_mask[1, ...].squeeze())).convert('RGB')
-        gt_nonmasking_background = Image.fromarray(np.uint8(gt_mask[2, ...].squeeze())).convert('RGB')
-        gt_foreground_attention = Image.fromarray(np.uint8(gt_mask[3, ...].squeeze())).convert('RGB')
+        gt_animals = Image.fromarray(np.uint8(gt_mask[0, ...].squeeze() * 255)).convert('RGB')
+        gt_masking_background = Image.fromarray(np.uint8(gt_mask[1, ...].squeeze() * 255)).convert('RGB')
+        gt_nonmasking_background = Image.fromarray(np.uint8(gt_mask[2, ...].squeeze() * 255)).convert('RGB')
+        gt_foreground_attention = Image.fromarray(np.uint8(gt_mask[3, ...].squeeze() * 255)).convert('RGB')
 
         pr_animals = Image.fromarray(np.uint8(pr_mask[0, ...].squeeze() * 255)).convert('RGB')
         pr_masking_background = Image.fromarray(np.uint8(pr_mask[1, ...].squeeze() * 255)).convert('RGB')
