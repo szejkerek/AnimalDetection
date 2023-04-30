@@ -2,7 +2,7 @@ import os
 import matplotlib.pyplot as plt
 import numpy as np
 import torch
-from PIL import Image
+from PIL import Image, ImageOps
 import config
 import utils
 from utils import get_non_repeating_numbers
@@ -37,6 +37,13 @@ def save_visualization(dataset, folder_name, enabled=False):
 
         normal_image = normal_image.resize((normal_image.width * 2, normal_image.height * 2))
         new_image = Image.new('RGB', (normal_image.width * 2, normal_image.height))
+
+        # Add red border of 1px to each image
+        normal_image = ImageOps.expand(normal_image, border=1, fill='red')
+        animals = ImageOps.expand(animals, border=1, fill='red')
+        masking_background = ImageOps.expand(masking_background, border=1, fill='red')
+        nonmasking_background = ImageOps.expand(nonmasking_background, border=1, fill='red')
+        foreground_attention = ImageOps.expand(foreground_attention, border=1, fill='red')
 
         new_image.paste(normal_image, (0, 0))
 
@@ -119,7 +126,10 @@ def update_plot(train_logs, valid_logs, test_log, enabled=True):
 
 
 def save_results(test_visualize, test_dataset, count=10):
+    utils.create_subfolder_in_date_folder("test_result")
+
     for i in get_non_repeating_numbers(len(test_dataset), count):
+        # Extract gt and pr masks from test_model
         image_vis = test_visualize[i][0].astype('uint8')
         image, gt_mask = test_dataset[i]
 
@@ -129,11 +139,47 @@ def save_results(test_visualize, test_dataset, count=10):
         pr_mask = config.model.predict(x_tensor)
         pr_mask = (pr_mask.squeeze().cpu().numpy().round())
 
-        utils.visualize(
-            image=image_vis,
-            ground_truth_mask=gt_mask[0, ...].squeeze(),
-            animal=pr_mask[0, ...].squeeze(),
-            masking=pr_mask[1, ...].squeeze(),
-            nonmasking=pr_mask[2, ...].squeeze(),
-            attention=pr_mask[3, ...].squeeze(),
-        )
+        # Convert images and masks to PTL images
+        normal_image = Image.fromarray(np.uint8(image_vis))
+        gt_animals = Image.fromarray(np.uint8(gt_mask[0, ...].squeeze())).convert('RGB')
+        gt_masking_background = Image.fromarray(np.uint8(gt_mask[1, ...].squeeze())).convert('RGB')
+        gt_nonmasking_background = Image.fromarray(np.uint8(gt_mask[2, ...].squeeze())).convert('RGB')
+        gt_foreground_attention = Image.fromarray(np.uint8(gt_mask[3, ...].squeeze())).convert('RGB')
+
+        pr_animals = Image.fromarray(np.uint8(pr_mask[0, ...].squeeze() * 255)).convert('RGB')
+        pr_masking_background = Image.fromarray(np.uint8(pr_mask[1, ...].squeeze() * 255)).convert('RGB')
+        pr_nonmasking_background = Image.fromarray(np.uint8(pr_mask[2, ...].squeeze() * 255)).convert('RGB')
+        pr_foreground_attention = Image.fromarray(np.uint8(pr_mask[3, ...].squeeze() * 255)).convert('RGB')
+
+        # Create canvas and resize default image
+        normal_image = normal_image.resize((normal_image.width * 2, normal_image.height * 2))
+        new_image = Image.new('RGB', (normal_image.width * 3, normal_image.height))
+
+        block_width = int(normal_image.width / 2)
+        block_height = int(normal_image.height / 2)
+        new_image.paste(normal_image, (0, 0))
+
+        # Add red border to each image
+        gt_animals = ImageOps.expand(gt_animals, border=1, fill='red')
+        gt_masking_background = ImageOps.expand(gt_masking_background, border=1, fill='red')
+        gt_nonmasking_background = ImageOps.expand(gt_nonmasking_background, border=1, fill='red')
+        gt_foreground_attention = ImageOps.expand(gt_foreground_attention, border=1, fill='red')
+        pr_animals = ImageOps.expand(pr_animals, border=1, fill='red')
+        pr_masking_background = ImageOps.expand(pr_masking_background, border=1, fill='red')
+        pr_nonmasking_background = ImageOps.expand(pr_nonmasking_background, border=1, fill='red')
+        pr_foreground_attention = ImageOps.expand(pr_foreground_attention, border=1, fill='red')
+
+        # Paste images on canvas to be merged
+        new_image.paste(gt_animals, (block_width * 2, 0))
+        new_image.paste(gt_masking_background, (block_width * 3, 0))
+        new_image.paste(gt_nonmasking_background, (block_width * 4, 0))
+        new_image.paste(gt_foreground_attention, (block_width * 5, 0))
+
+        new_image.paste(pr_animals, (block_width * 2, block_height))
+        new_image.paste(pr_masking_background, (block_width * 3, block_height))
+        new_image.paste(pr_nonmasking_background, (block_width * 4, block_height))
+        new_image.paste(pr_foreground_attention, (block_width * 5, block_height))
+
+        # Save file
+        path = os.path.join(config.CURRENT_PATH, os.path.join("test_result", 'test_' + str(i) + '.png'))
+        new_image.save(path)

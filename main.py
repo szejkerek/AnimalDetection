@@ -33,7 +33,7 @@ while True:
 
     learning_score = config.calculate_score(valid_logs)
 
-    utils.update_plot(train_logs, valid_logs, test_log, enabled=False)
+    utils.update_plot(train_logs, valid_logs, test_log, enabled=True)
 
     if max_score < learning_score:
         max_score = learning_score
@@ -49,4 +49,4 @@ config.ELAPSED_TIME = end_time - start_time
 formatted_time = str(datetime.timedelta(seconds=config.ELAPSED_TIME)).split(".")[0]
 print("Time of learning", formatted_time)
 
-save_results(data_model.test_visualize, data_model.test_dataset, count=1)
+save_results(data_model.test_visualize, data_model.test_dataset, count=-1)
