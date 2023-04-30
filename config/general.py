@@ -1,6 +1,6 @@
 import os
-import utils
 
+EPOCH_COUNT = 0
 CURRENT_PATH = ""
 IS_MODEL_SAVED = False
 

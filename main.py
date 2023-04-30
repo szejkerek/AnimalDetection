@@ -1,7 +1,8 @@
 import keyboard as keyboard
 import torch
-import data_model
+
 import config
+import data_model
 import utils
 
 if not utils.continue_training(enabled=False):
@@ -14,24 +15,34 @@ utils.setup_env()
 # utils.save_visualization(data_model.valid_visualize, "Valid", enabled=True)
 # utils.save_visualization(data_model.test_visualize, "Test", enabled=True)
 
+epoch_nums = []
+iou_scores = []
+
 max_score = 0
-for i in range(0, 10):
+while True:
     # Key must be hold at the start of loop cycle
     if keyboard.is_pressed(config.INTERRUPT_KEY):
         print("Learning interrupted by user.")
         break
 
-    print('\nEpoch: {}'.format(i))
+    print('\nEpoch: {}'.format(config.EPOCH_COUNT))
     train_logs = data_model.train_epoch.run(data_model.train_loader)
     valid_logs = data_model.valid_epoch.run(data_model.valid_loader)
 
-    if max_score < valid_logs['iou_score']:
-        max_score = valid_logs['iou_score']
+    score = config.calculate_score(valid_logs)
+
+    epoch_nums.append(config.EPOCH_COUNT)
+    iou_scores.append(score)
+
+    if max_score < score:
+        max_score = score
         utils.save_model()
 
-    if i == 25:
+    if config.EPOCH_COUNT == 25:
         config.optimizer.param_groups[0]['lr'] = 1e-5
         print('Decrease decoder learning rate to 1e-5!')
+
+    config.EPOCH_COUNT += 1
 
 test_log = data_model.evaluate_test_data()
 

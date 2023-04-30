@@ -1,8 +1,6 @@
-import config
 import segmentation_models_pytorch as smp
-
+import config
 from data_model import test_dataloader
-from utils import load_model
 
 train_epoch = smp.utils.train.TrainEpoch(
     config.model,

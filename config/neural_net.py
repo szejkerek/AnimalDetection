@@ -36,6 +36,10 @@ optimizer = torch.optim.Adam([
 preprocessing_fn = smp.encoders.get_preprocessing_fn(ENCODER, ENCODER_WEIGHTS)
 
 
+def calculate_score(valid_logs):
+    return valid_logs['iou_score']
+
+
 def save_config(current_path=""):
     f = open(os.path.join(current_path, "config.cfg"), "w")
 

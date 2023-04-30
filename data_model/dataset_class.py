@@ -1,8 +1,6 @@
 import os
-
 import cv2
 import numpy as np
-
 import config
 import utils
 from torch.utils.data import Dataset as BaseDataset
