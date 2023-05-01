@@ -1,4 +1,3 @@
-import datetime
 import time
 import keyboard as keyboard
 import config
@@ -42,11 +41,10 @@ while True:
     if config.EPOCH_COUNT == 25:
         config.optimizer.param_groups[0]['lr'] = 1e-5
         print('Decrease decoder learning rate to 1e-5!')
+
     config.EPOCH_COUNT += 1
 
-end_time = time.time()
-config.ELAPSED_TIME = end_time - start_time
-formatted_time = str(datetime.timedelta(seconds=config.ELAPSED_TIME)).split(".")[0]
-print("Time of learning", formatted_time)
+config.ELAPSED_TIME = time.time() - start_time
 
+config.save_stats()
 save_results(data_model.test_visualize, data_model.test_dataset, count=-1)
