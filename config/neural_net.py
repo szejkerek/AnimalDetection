@@ -14,6 +14,7 @@ ENCODER = 'resnet34'
 ENCODER_WEIGHTS = 'imagenet'
 ACTIVATION = 'softmax2d'
 lr = 0.0001
+BATCH_SIZE = 32
 
 model = smp.Unet(
     encoder_name=ENCODER,
@@ -71,5 +72,6 @@ def save_config(current_path=""):
     f.write(config_line("LossFunction", loss.__class__))
     f.write(config_line("OptimizerFunction", optimizer.__module__))
     f.write(config_line("LearningRate", lr))
+    f.write(config_line("BatchSize", BATCH_SIZE))
 
     f.close()

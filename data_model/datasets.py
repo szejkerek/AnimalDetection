@@ -28,7 +28,7 @@ test_dataset = Dataset(
 )
 
 test_dataloader = DataLoader(test_dataset)
-train_loader = DataLoader(train_dataset, batch_size=15, shuffle=True, num_workers=0)
+train_loader = DataLoader(train_dataset, batch_size=config.BATCH_SIZE, shuffle=True, num_workers=0)
 valid_loader = DataLoader(valid_dataset, batch_size=1, shuffle=False, num_workers=0)
 
 train_visualize = Dataset(config.x_train_dir, config.y_train_dir, classes=config.CLASSES)
