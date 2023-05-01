@@ -52,7 +52,7 @@ def save_config(current_path=""):
     f.write(config_line("ENCODER_WEIGHTS", ENCODER_WEIGHTS))
     f.write(config_line("ACTIVATION", ACTIVATION))
     f.write(config_line("Model", model.__module__))
-    f.write(config_line("LossFunction", loss.__module__))
+    f.write(config_line("LossFunction", loss.__class__))
     f.write(config_line("OptimizerFunction", optimizer.__module__))
     f.write(config_line("LearningRate", lr))
     f.write("#Metrics\n")

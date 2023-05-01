@@ -10,7 +10,7 @@ CLASSES = ['animal', 'maskingbackground', 'nonmaskingbackground', 'nonmaskingfor
 WEIGHTS = torch.tensor([5, 3, 1, 1])
 COLORS = [(0, 0, 255), (0, 255, 0), (255, 0, 0), (255, 255, 255)]
 
-MY_DATASET = r'.\!Dataset\Dataset1'
+MY_DATASET = r'.\!Dataset\small_dataset'
 
 x_train_dir = os.path.join(MY_DATASET, 'Train\\Images')
 y_train_dir = os.path.join(MY_DATASET, 'Train\\Masks')
