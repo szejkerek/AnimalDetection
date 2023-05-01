@@ -2,12 +2,9 @@ import os
 
 import torch
 
-EPOCH_COUNT = 0
-CURRENT_PATH = ""
+
 IS_MODEL_SAVED = False
 
-CLASSES = ['animal', 'maskingbackground', 'nonmaskingbackground', 'nonmaskingforegroundattention']
-WEIGHTS = torch.tensor([5, 3, 1, 1])
 COLORS = [(0, 0, 255), (0, 255, 0), (255, 0, 0), (255, 255, 255)]
 
 MY_DATASET = r'.\!Dataset\small_dataset'
@@ -23,5 +20,3 @@ y_test_dir = os.path.join(MY_DATASET, 'Test\\Masks')
 
 DEVICE = 'cuda'
 
-INTERRUPT_KEY = 'esc'
-ELAPSED_TIME = 0

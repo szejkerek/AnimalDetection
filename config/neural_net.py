@@ -4,8 +4,11 @@ import segmentation_models_pytorch as smp
 import torch
 
 import config
-from config import CLASSES
+from config import COLORS
 from utils import config_line
+
+CLASSES = ['animal', 'maskingbackground', 'nonmaskingbackground', 'nonmaskingforegroundattention']
+WEIGHTS = torch.tensor([5, 3, 1, 1])
 
 ENCODER = 'resnet34'
 ENCODER_WEIGHTS = 'imagenet'
@@ -20,7 +23,7 @@ model = smp.Unet(
     activation=ACTIVATION,
 )
 
-loss = smp.utils.losses.CrossEntropyLoss(weight=config.WEIGHTS)
+loss = smp.utils.losses.CrossEntropyLoss(weight=WEIGHTS)
 
 metrics = [
     smp.utils.metrics.IoU(threshold=0.5),
@@ -48,17 +51,25 @@ def calculate_loss(logs):
 def save_config(current_path=""):
     f = open(os.path.join(current_path, "config.cfg"), "w")
 
-    f.write(config_line("ENCODER", ENCODER))
-    f.write(config_line("ENCODER_WEIGHTS", ENCODER_WEIGHTS))
-    f.write(config_line("ACTIVATION", ACTIVATION))
+    for i in range(len(CLASSES)):
+        f.write("#Class_{}\n".format(i))
+        f.write(config_line("Name", str(CLASSES[i])))
+        f.write(config_line("Color", str(COLORS[i])))
+        f.write(config_line("LossWeight", str(WEIGHTS[i])))
+        f.write("\n")
+
+    for i in range(len(metrics)):
+        f.write("#Metric_{}\n".format(str(i)))
+        f.write(config_line("Name", metrics[i].__name__))
+        f.write(config_line("Threshold", metrics[i].threshold))
+        f.write("\n")
+
+    f.write(config_line("Encoder", ENCODER))
+    f.write(config_line("EncoderWeights", ENCODER_WEIGHTS))
+    f.write(config_line("Activation", ACTIVATION))
     f.write(config_line("Model", model.__module__))
     f.write(config_line("LossFunction", loss.__class__))
     f.write(config_line("OptimizerFunction", optimizer.__module__))
     f.write(config_line("LearningRate", lr))
-    f.write("#Metrics\n")
-    for i in range(len(metrics)):
-        f.write(config_line("Metric" + str(i) + "_name", metrics[i].__name__))
-        f.write(config_line("Metric" + str(i) + "_threshold", metrics[i].threshold))
 
     f.close()
-
