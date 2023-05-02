@@ -7,6 +7,7 @@ from multiprocessing import freeze_support
 import datetime
 import torch
 import config
+import gc
 
 
 def setup_env():
@@ -14,6 +15,9 @@ def setup_env():
     os.environ['CUDA_VISIBLE_DEVICES'] = '0'
     ssl._create_default_https_context = ssl._create_unverified_context
     config.save_config(config.CURRENT_PATH)
+    torch.cuda.empty_cache()
+    print(torch.cuda.memory_summary(device=config.DEVICE, abbreviated=False))
+    gc.collect()
 
 
 def create_current_folder():

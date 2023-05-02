@@ -3,18 +3,19 @@ import os
 import segmentation_models_pytorch as smp
 import torch
 
-import config
 from config import COLORS
 from utils import config_line
 
 CLASSES = ['animal', 'maskingbackground', 'nonmaskingbackground', 'nonmaskingforegroundattention']
-WEIGHTS = torch.tensor([5, 3, 1, 1])
+WEIGHTS = torch.tensor([10, 3, 3, 1])
 
 ENCODER = 'resnet34'
 ENCODER_WEIGHTS = 'imagenet'
 ACTIVATION = 'softmax2d'
 lr = 0.0001
-BATCH_SIZE = 32
+BATCH_SIZE = 24
+
+IOU_SCORE_WEIGHT = 5
 
 model = smp.Unet(
     encoder_name=ENCODER,
@@ -28,7 +29,7 @@ loss = smp.utils.losses.CrossEntropyLoss(weight=WEIGHTS)
 
 metrics = [
     smp.utils.metrics.IoU(threshold=0.5),
-    # smp.utils.metrics.Fscore(threshold=0.5),
+    #smp.utils.metrics.Fscore(threshold=0.5),
     # smp.utils.metrics.Accuracy(threshold=0.5),
     # smp.utils.metrics.Recall(threshold=0.5),
     # smp.utils.metrics.Precision(threshold=0.5),
@@ -65,6 +66,7 @@ def save_config(current_path=""):
         f.write(config_line("Threshold", metrics[i].threshold))
         f.write("\n")
 
+    f.write(config_line("IOU_SCORE_WEIGHT", IOU_SCORE_WEIGHT))
     f.write(config_line("Encoder", ENCODER))
     f.write(config_line("EncoderWeights", ENCODER_WEIGHTS))
     f.write(config_line("Activation", ACTIVATION))

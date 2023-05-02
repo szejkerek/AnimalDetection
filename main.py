@@ -30,7 +30,7 @@ while True:
     valid_logs = data_model.valid_epoch.run(data_model.valid_loader)
     test_log = data_model.evaluate_test_data()
 
-    learning_score = config.calculate_score(valid_logs)
+    learning_score = valid_logs['iou_score']
 
     utils.update_plot(train_logs, valid_logs, test_log, enabled=True)
 
