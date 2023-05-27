@@ -41,9 +41,9 @@ while True:
         max_score = learning_score
         utils.save_model()
 
-    # if config.EPOCH_COUNT == 25:
-    #     config.optimizer.param_groups[0]['lr'] = 1e-5
-    #     print('Decrease decoder learning rate to 1e-5!')
+    if config.EPOCH_COUNT == 30:
+        config.optimizer.param_groups[0]['lr'] = 1e-5
+        print('Decrease decoder learning rate to 1e-5!')
 
     config.EPOCH_COUNT += 1
 

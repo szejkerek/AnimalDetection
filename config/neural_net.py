@@ -30,7 +30,7 @@ loss = smp.utils.losses.CrossEntropyLoss(weight=WEIGHTS)
 
 metrics = [
     smp.utils.metrics.IoU(threshold=0.5),
-    #smp.utils.metrics.Fscore(threshold=0.5),
+    # smp.utils.metrics.Fscore(threshold=0.5),
     # smp.utils.metrics.Accuracy(threshold=0.5),
     # smp.utils.metrics.Recall(threshold=0.5),
     # smp.utils.metrics.Precision(threshold=0.5),
