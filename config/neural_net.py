@@ -1,23 +1,23 @@
 import os
 
 import segmentation_models_pytorch as smp
+from segmentation_models_pytorch import DeepLabV3Plus
 import torch
 
 from config import COLORS
 from utils import config_line
 
 CLASSES = ['animal', 'maskingbackground', 'nonmaskingbackground', 'nonmaskingforegroundattention']
-WEIGHTS = torch.tensor([10, 3, 3, 1])
+WEIGHTS = torch.tensor([10, 2, 2, 1])
 
 ENCODER = 'resnet34'
 ENCODER_WEIGHTS = 'imagenet'
 ACTIVATION = 'softmax2d'
 lr = 0.0001
-BATCH_SIZE = 24
+BATCH_SIZE = 10
 
-IOU_SCORE_WEIGHT = 5
 
-model = smp.Unet(
+model = DeepLabV3Plus(
     encoder_name=ENCODER,
     encoder_weights=ENCODER_WEIGHTS,
     classes=len(CLASSES),
@@ -26,6 +26,7 @@ model = smp.Unet(
 )
 
 loss = smp.utils.losses.CrossEntropyLoss(weight=WEIGHTS)
+
 
 metrics = [
     smp.utils.metrics.IoU(threshold=0.5),
@@ -66,7 +67,6 @@ def save_config(current_path=""):
         f.write(config_line("Threshold", metrics[i].threshold))
         f.write("\n")
 
-    f.write(config_line("IOU_SCORE_WEIGHT", IOU_SCORE_WEIGHT))
     f.write(config_line("Encoder", ENCODER))
     f.write(config_line("EncoderWeights", ENCODER_WEIGHTS))
     f.write(config_line("Activation", ACTIVATION))

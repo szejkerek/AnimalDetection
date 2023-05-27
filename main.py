@@ -1,5 +1,7 @@
 import time
 import keyboard as keyboard
+import torch
+
 import config
 import data_model
 import utils
@@ -19,6 +21,7 @@ max_score = 0
 
 start_time = time.time()
 while True:
+    torch.cuda.empty_cache()
     # Key must be hold at the start of loop cycle
     if keyboard.is_pressed(config.INTERRUPT_KEY):
         print("Learning interrupted by user.")
@@ -38,9 +41,9 @@ while True:
         max_score = learning_score
         utils.save_model()
 
-    if config.EPOCH_COUNT == 25:
-        config.optimizer.param_groups[0]['lr'] = 1e-5
-        print('Decrease decoder learning rate to 1e-5!')
+    # if config.EPOCH_COUNT == 25:
+    #     config.optimizer.param_groups[0]['lr'] = 1e-5
+    #     print('Decrease decoder learning rate to 1e-5!')
 
     config.EPOCH_COUNT += 1
 
