@@ -45,6 +45,10 @@ while True:
         config.optimizer.param_groups[0]['lr'] = 1e-5
         print('Decrease decoder learning rate to 1e-5!')
 
+    if config.EPOCH_COUNT == 200:
+        config.optimizer.param_groups[0]['lr'] = 1e-6
+        print('Decrease decoder learning rate to 1e-6!')
+
     config.EPOCH_COUNT += 1
 
 config.ELAPSED_TIME = time.time() - start_time

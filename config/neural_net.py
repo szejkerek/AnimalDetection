@@ -14,7 +14,7 @@ ENCODER = 'resnet34'
 ENCODER_WEIGHTS = 'imagenet'
 ACTIVATION = 'softmax2d'
 lr = 0.0001
-BATCH_SIZE = 10
+BATCH_SIZE = 15
 
 
 model = DeepLabV3Plus(
