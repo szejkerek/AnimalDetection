@@ -31,7 +31,11 @@ while True:
 
     train_logs = data_model.train_epoch.run(data_model.train_loader)
     valid_logs = data_model.valid_epoch.run(data_model.valid_loader)
-    test_log = data_model.evaluate_test_data()
+
+    if config.EPOCH_COUNT % 30 == 0:
+        test_log = data_model.evaluate_test_data()
+
+    test_log = 0
 
     learning_score = valid_logs['iou_score']
 
@@ -52,6 +56,6 @@ while True:
     config.EPOCH_COUNT += 1
 
 config.ELAPSED_TIME = time.time() - start_time
-
-config.save_stats()
+test_log = data_model.evaluate_test_data()
+config.save_stats(test_log)
 save_results(data_model.test_visualize, data_model.test_dataset, count=-1)

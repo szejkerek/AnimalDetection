@@ -22,7 +22,7 @@ valid_dataset = Dataset(
 test_dataset = Dataset(
     config.x_test_dir,
     config.y_test_dir,
-    augmentation=utils.get_validation_augmentation(),
+    augmentation=utils.get_test_augmentation(),
     preprocessing=utils.get_preprocessing(config.preprocessing_fn),
     classes=config.CLASSES,
 )

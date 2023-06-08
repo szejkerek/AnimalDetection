@@ -39,6 +39,9 @@ class Dataset(BaseDataset):
         self.augmentation = augmentation
         self.preprocessing = preprocessing
 
+    def get_name(self, i):
+        return os.path.splitext(os.path.basename(self.images_fps[i]))[0]
+
     def __getitem__(self, i):
         # read data
         image = cv2.imread(self.images_fps[i])

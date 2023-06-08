@@ -9,7 +9,7 @@ EPOCH_COUNT = 0
 CURRENT_PATH = ""
 
 
-def save_stats():
+def save_stats(model_value):
     path = config.CURRENT_PATH
     elapsed = config.ELAPSED_TIME
     epoch = config.EPOCH_COUNT

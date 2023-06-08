@@ -85,11 +85,11 @@ def update_plot(train_logs, valid_logs, test_log, enabled=True):
 
     train_score = config.calculate_score(train_logs)
     valid_score = config.calculate_score(valid_logs)
-    test_score = config.calculate_score(test_log)
+    test_score = 0  # config.calculate_score(test_log)
 
     train_loss = config.calculate_loss(train_logs)
     valid_loss = config.calculate_loss(valid_logs)
-    test_loss = config.calculate_loss(test_log)
+    test_loss = 0  # config.calculate_loss(test_log)
 
     train_scores.append(train_score)
     valid_scores.append(valid_score)
@@ -127,11 +127,12 @@ def update_plot(train_logs, valid_logs, test_log, enabled=True):
 
 def save_results(test_visualize, test_dataset, count=10):
     utils.create_subfolder_in_date_folder("test_result")
-
     for i in get_non_repeating_numbers(len(test_dataset), count):
         # Extract gt and pr masks from test_model
         image_vis = test_visualize[i][0].astype('uint8')
         image, gt_mask = test_dataset[i]
+        filename = test_dataset.get_name(i)
+        print("Saving "+filename+'...')
 
         gt_mask = gt_mask.squeeze()
 
@@ -140,7 +141,8 @@ def save_results(test_visualize, test_dataset, count=10):
         pr_mask = (pr_mask.squeeze().cpu().numpy().round())
 
         # Convert images and masks to PTL images
-        normal_image = Image.fromarray(np.uint8(image_vis))
+        normal_image = Image.fromarray(np.uint8(image_vis)).resize((512, 512))
+
         gt_animals = Image.fromarray(np.uint8(gt_mask[0, ...].squeeze() * 255)).convert('RGB')
         gt_masking_background = Image.fromarray(np.uint8(gt_mask[1, ...].squeeze() * 255)).convert('RGB')
         gt_nonmasking_background = Image.fromarray(np.uint8(gt_mask[2, ...].squeeze() * 255)).convert('RGB')
@@ -152,6 +154,7 @@ def save_results(test_visualize, test_dataset, count=10):
         pr_foreground_attention = Image.fromarray(np.uint8(pr_mask[3, ...].squeeze() * 255)).convert('RGB')
 
         # Create canvas and resize default image
+       #normal_image = normal_image.resize((normal_image.width * 2, normal_image.height * 2))
         normal_image = normal_image.resize((normal_image.width * 2, normal_image.height * 2))
         new_image = Image.new('RGB', (normal_image.width * 3, normal_image.height))
 
@@ -181,5 +184,6 @@ def save_results(test_visualize, test_dataset, count=10):
         new_image.paste(pr_foreground_attention, (block_width * 5, block_height))
 
         # Save file
-        path = os.path.join(config.CURRENT_PATH, os.path.join("test_result", 'test_' + str(i) + '.png'))
+        path = os.path.join(config.CURRENT_PATH,
+                            os.path.join("test_result", filename + '_result' + '.png'))
         new_image.save(path)

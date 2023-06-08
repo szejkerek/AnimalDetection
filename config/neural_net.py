@@ -8,7 +8,7 @@ from config import COLORS
 from utils import config_line
 
 CLASSES = ['animal', 'maskingbackground', 'nonmaskingbackground', 'nonmaskingforegroundattention']
-WEIGHTS = torch.tensor([10, 2, 2, 1])
+WEIGHTS = torch.tensor([1, 0.2, 0.2, 0.1])
 
 ENCODER = 'resnet34'
 ENCODER_WEIGHTS = 'imagenet'
