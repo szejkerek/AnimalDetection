@@ -141,7 +141,7 @@ def save_results(test_visualize, test_dataset, count=10):
         pr_mask = (pr_mask.squeeze().cpu().numpy().round())
 
         # Convert images and masks to PTL images
-        normal_image = Image.fromarray(np.uint8(image_vis)).resize((512, 512))
+        normal_image = Image.fromarray(np.uint8(image_vis))
 
         gt_animals = Image.fromarray(np.uint8(gt_mask[0, ...].squeeze() * 255)).convert('RGB')
         gt_masking_background = Image.fromarray(np.uint8(gt_mask[1, ...].squeeze() * 255)).convert('RGB')
@@ -154,7 +154,6 @@ def save_results(test_visualize, test_dataset, count=10):
         pr_foreground_attention = Image.fromarray(np.uint8(pr_mask[3, ...].squeeze() * 255)).convert('RGB')
 
         # Create canvas and resize default image
-       #normal_image = normal_image.resize((normal_image.width * 2, normal_image.height * 2))
         normal_image = normal_image.resize((normal_image.width * 2, normal_image.height * 2))
         new_image = Image.new('RGB', (normal_image.width * 3, normal_image.height))
 

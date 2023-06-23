@@ -1,5 +1,4 @@
 import time
-import keyboard as keyboard
 import torch
 
 import config
@@ -20,40 +19,40 @@ utils.setup_env()
 max_score = 0
 
 start_time = time.time()
-while True:
-    torch.cuda.empty_cache()
-    # Key must be hold at the start of loop cycle
-    if keyboard.is_pressed(config.INTERRUPT_KEY):
-        print("Learning interrupted by user.")
-        break
 
-    print('\nEpoch: {}'.format(config.EPOCH_COUNT))
+try:
+    while True:
+        torch.cuda.empty_cache()
 
-    train_logs = data_model.train_epoch.run(data_model.train_loader)
-    valid_logs = data_model.valid_epoch.run(data_model.valid_loader)
+        print(f'\nEpoch: {config.EPOCH_COUNT}')
 
-    if config.EPOCH_COUNT % 30 == 0:
-        test_log = data_model.evaluate_test_data()
+        train_logs = data_model.train_epoch.run(data_model.train_loader)
+        valid_logs = data_model.valid_epoch.run(data_model.valid_loader)
 
-    test_log = 0
+        if config.EPOCH_COUNT % 30 == 0:
+            test_log = data_model.evaluate_test_data()
 
-    learning_score = valid_logs['iou_score']
+        test_log = 0
 
-    utils.update_plot(train_logs, valid_logs, test_log, enabled=True)
+        learning_score = valid_logs['iou_score']
 
-    if max_score < learning_score:
-        max_score = learning_score
-        utils.save_model()
+        utils.update_plot(train_logs, valid_logs, test_log, enabled=True)
 
-    if config.EPOCH_COUNT == 30:
-        config.optimizer.param_groups[0]['lr'] = 1e-5
-        print('Decrease decoder learning rate to 1e-5!')
+        if max_score < learning_score:
+            max_score = learning_score
+            utils.save_model()
 
-    if config.EPOCH_COUNT == 200:
-        config.optimizer.param_groups[0]['lr'] = 1e-6
-        print('Decrease decoder learning rate to 1e-6!')
+        if config.EPOCH_COUNT == 30:
+            config.optimizer.param_groups[0]['lr'] = 0.00001
+            print('Decrease decoder learning rate to 1e-5!')
 
-    config.EPOCH_COUNT += 1
+        if config.EPOCH_COUNT == 200:
+            config.optimizer.param_groups[0]['lr'] = 0.000001
+            print('Decrease decoder learning rate to 1e-6!')
+
+        config.EPOCH_COUNT += 1
+except KeyboardInterrupt:
+    print("Learning interrupted by user.")
 
 config.ELAPSED_TIME = time.time() - start_time
 test_log = data_model.evaluate_test_data()

@@ -8,13 +8,13 @@ from config import COLORS
 from utils import config_line
 
 CLASSES = ['animal', 'maskingbackground', 'nonmaskingbackground', 'nonmaskingforegroundattention']
-WEIGHTS = torch.tensor([1, 0.2, 0.2, 0.1])
+WEIGHTS = torch.tensor([1, 0.09, 0.03, 0.005])
 
 ENCODER = 'resnet34'
 ENCODER_WEIGHTS = 'imagenet'
 ACTIVATION = 'softmax2d'
 lr = 0.0001
-BATCH_SIZE = 15
+BATCH_SIZE = 10
 
 
 model = DeepLabV3Plus(
