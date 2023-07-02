@@ -11,26 +11,27 @@ def get_training_augmentation():
         albu.Perspective(p=0.5),
         albu.OneOf(
             [
-                albu.CLAHE(p=1),
-                albu.RandomBrightnessContrast(p=1),
-                albu.RandomGamma(p=1),
+                albu.CLAHE(clip_limit=2, tile_grid_size=(8, 8), p=0.5),
+                albu.RandomBrightnessContrast(brightness_limit=0.2, contrast_limit=0.2, p=0.5),
+                albu.RandomGamma(gamma_limit=(80, 120), p=0.5),
+                albu.HueSaturationValue(hue_shift_limit=10, sat_shift_limit=20, val_shift_limit=10, p=0.5),
             ],
-            p=0.9,
+            p=0.8,
         ),
         albu.OneOf(
             [
-                albu.Sharpen(p=1),
-                albu.Blur(blur_limit=(3, 7), p=1),
-                albu.MotionBlur(blur_limit=(3, 7), p=1),
+                albu.GaussianBlur(blur_limit=(3, 7), p=0.5),
+                albu.MedianBlur(blur_limit=3, p=0.5),
+                albu.MotionBlur(blur_limit=(3, 7), p=0.5),
             ],
-            p=0.9,
+            p=0.5,
         ),
         albu.OneOf(
             [
-                albu.RandomBrightnessContrast(p=1),
-                albu.HueSaturationValue(p=1),
+                albu.GaussNoise(var_limit=(10.0, 50.0), p=0.5),
+                albu.ImageCompression(quality_lower=85, quality_upper=95, p=0.5),
             ],
-            p=0.9,
+            p=0.5,
         ),
     ]
     return albu.Compose(train_transform)
