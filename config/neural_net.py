@@ -1,23 +1,23 @@
 import os
 
 import segmentation_models_pytorch as smp
-from segmentation_models_pytorch import DeepLabV3Plus
+from segmentation_models_pytorch import DeepLabV3Plus, Unet
 import torch
 
 from config import COLORS
 from utils import config_line
 
 CLASSES = ['animal', 'maskingbackground', 'nonmaskingbackground', 'nonmaskingforegroundattention']
-WEIGHTS = torch.tensor([1, 0.09, 0.03, 0.005])
+WEIGHTS = torch.tensor([1, 0.05, 0.03, 0.01])
 
-ENCODER = 'resnet34'
+ENCODER = 'resnet18'
 ENCODER_WEIGHTS = 'imagenet'
 ACTIVATION = 'softmax2d'
 lr = 0.0001
-BATCH_SIZE = 10
+BATCH_SIZE = 16
 
 
-model = DeepLabV3Plus(
+model = Unet(
     encoder_name=ENCODER,
     encoder_weights=ENCODER_WEIGHTS,
     classes=len(CLASSES),
