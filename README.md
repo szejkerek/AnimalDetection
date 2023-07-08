@@ -10,7 +10,7 @@ The dataset used for our research can be found in the `!Dataset\Images` director
 
 Below is an example image from the dataset along with its corresponding mask, which describes the presence of the animal in the image, the masking and non-masking backgrounds, and the attention-grabbing fragment.
 
-![Gordon Bartlomiej 1](https://github.com/szejkerek/AnimalDetection/assets/69083596/46bdeb98-99ef-437d-89e5-206c4aa0ce6e)
+![Gordon Bartlomiej 1](https://github.com/szejkerek/AnimalDetection/assets/69083596/baacec1c-22dc-491f-85b1-4a0d6bf1bf87)
 
 *Example image with a camouflaged animal*
 
