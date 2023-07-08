@@ -13,7 +13,7 @@ Below is an example image from the dataset along with its corresponding mask, wh
 ![ExampleImage](https://github.com/szejkerek/AnimalClassificationNeuralNetwork/assets/69083596/f1416841-a96b-4e32-ba63-62816cf76424)
 *Example image with a camouflaged animal*
 
-![ExampleMask](https://github.com/szejkerek/AnimalClassificationNeuralNetwork/assets/69083596/4a3e874a-ee30-4e60-a13d-6e77115fc198)
+![ExampleMask](https://github.com/szejkerek/AnimalDetection/assets/69083596/370e7bfe-625a-4dfa-95e2-d81c7f405e6b)
 *Example mask overlayed on the image*
 
 ## Network Training
@@ -45,7 +45,7 @@ The file contains information such as:
 
 Example Learning Curve and Loss Plot:
 
-![LearningCurve](https://github.com/szejkerek/AnimalClassificationNeuralNetwork/assets/69083596/b8be0420-dfce-47f3-9059-8136b4d70429)
+![LearningCurve](https://github.com/szejkerek/AnimalDetection/assets/69083596/025ef893-559d-4263-8e5d-6b2b131d0a8d)
 
 ## Best Approach
 
