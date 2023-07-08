@@ -10,7 +10,8 @@ The dataset used for our research can be found in the `!Dataset\Images` director
 
 Below is an example image from the dataset along with its corresponding mask, which describes the presence of the animal in the image, the masking and non-masking backgrounds, and the attention-grabbing fragment.
 
-![ExampleImage](https://github.com/szejkerek/AnimalClassificationNeuralNetwork/assets/69083596/f1416841-a96b-4e32-ba63-62816cf76424)
+![Gordon Bartlomiej 1](https://github.com/szejkerek/AnimalDetection/assets/69083596/46bdeb98-99ef-437d-89e5-206c4aa0ce6e)
+
 *Example image with a camouflaged animal*
 
 ![ExampleMask](https://github.com/szejkerek/AnimalDetection/assets/69083596/370e7bfe-625a-4dfa-95e2-d81c7f405e6b)
@@ -66,26 +67,26 @@ Approach:
 By returning to the UNet architecture with pre-defined weights and utilizing a batch size of 15, we observed improved results. The network demonstrated less generalization, resulting in better animal detection performance. Based on these findings, we conclude that this approach provides the most optimal configuration for detecting animals in camouflaged environments.
 
 Here are a few examples of output images obtained using the best approach:
+![test_15](https://github.com/szejkerek/AnimalDetection/assets/69083596/6e22a4f4-0d41-4d06-982c-67ed42ae2935)
 
-![Output1](https://github.com/szejkerek/AnimalClassificationNeuralNetwork/assets/69083596/d1a5de2c-559e-43a9-8326-60b6fe67f586)
 *Output image 1*
+![test_8](https://github.com/szejkerek/AnimalDetection/assets/69083596/b5209eb6-a070-4975-b4cc-d56a96b5f964)
 
-![Output2](https://github.com/szejkerek/AnimalClassificationNeuralNetwork/assets/69083596/924f5224-8ad6-4894-8735-2dc80919cbf8)
 *Output image 2*
+![test_13](https://github.com/szejkerek/AnimalDetection/assets/69083596/03aca162-8f50-4e75-96b8-b88a0a660467)
 
-![Output3](https://github.com/szejkerek/AnimalClassificationNeuralNetwork/assets/69083596/dd41f97f-4a25-452e-98c0-81964de3b8b4)
 *Output image 3*
+![test_9](https://github.com/szejkerek/AnimalDetection/assets/69083596/dfce35ef-4382-4959-84ae-a597eabdb7b1)
 
-![Output4](https://github.com/szejkerek/AnimalClassificationNeuralNetwork/assets/69083596/f7d5cd1b-a7dc-47bf-9c93-56bcb77b86f8)
 *Output image 4*
+![test_5](https://github.com/szejkerek/AnimalDetection/assets/69083596/38d1caf9-c819-4a4d-ba78-7c28b6b7177a)
 
-![Output5](https://github.com/szejkerek/AnimalClassificationNeuralNetwork/assets/69083596/bfec3896-c632-4f8f-b913-d002037b637c)
 *Output image 5*
+![test_0](https://github.com/szejkerek/AnimalDetection/assets/69083596/b3c14a20-b019-4290-bc41-4030c41f002d)
 
-![Output6](https://github.com/szejkerek/AnimalClassificationNeuralNetwork/assets/69083596/9f273be0-59da-42e5-8dd5-62e73d1f6c04)
 *Output image 6*
+![test_7](https://github.com/szejkerek/AnimalDetection/assets/69083596/e88a3c14-3f38-4999-9bef-30fbf89f25d2)
 
-![Output7](https://github.com/szejkerek/AnimalClassificationNeuralNetwork/assets/69083596/a8091074-62a0-482f-8e91-ed7b1aaee425)
 *Output image 7*
 
 ## Run Locally
