@@ -130,3 +130,63 @@ Based on our project, we have drawn several conclusions. First and foremost, we 
 This project utilizes the [segmentation_models.pytorch](https://github.com/qubvel/segmentation_models.pytorch) library for advanced neural network architectures.
 
 > Qubvel. segmentation_models.pytorch. Retrieved from: https://github.com/qubvel/segmentation_models.pytorch
+
+## Code Highlights
+
+### Color-Indexed Multi-Class Mask Extraction
+
+```python
+# data_model/dataset_class.py  (lines 66–73)
+masks = []
+for cls_value in self.class_values:
+    color = config.COLORS[cls_value]
+    newMask = cv2.inRange(mask, color, color)
+    newMask = np.float32(newMask)
+    newMask = cv2.normalize(newMask, None, alpha=0, beta=1, norm_type=cv2.NORM_MINMAX, dtype=cv2.CV_32F)
+    masks.append(newMask)
+mask = np.stack(masks, axis=-1).astype('float32')
+```
+
+Each semantic class (animal, masking background, non-masking background, foreground attention) is encoded as a distinct RGB color in the ground-truth mask images. At load time, the Dataset iterates over the requested class list, performs exact-color range matching via `cv2.inRange`, normalizes each binary channel to [0, 1], and stacks them into a single `(H, W, C)` float tensor. This avoids storing separate mask files per class and cleanly decouples the segmentation task's multi-channel representation from the storage format.
+
+### Stochastic Multi-Group Augmentation Pipeline
+
+```python
+# utils/augmentation.py  (lines 4–37)
+def get_training_augmentation():
+    train_transform = [
+        albu.HorizontalFlip(p=0.5),
+        albu.ShiftScaleRotate(scale_limit=0.1, rotate_limit=10, shift_limit=0.1, p=0.9, border_mode=0),
+        albu.PadIfNeeded(min_height=544, min_width=544, always_apply=True, border_mode=0),
+        albu.RandomCrop(height=544, width=544, always_apply=True),
+        albu.GaussNoise(p=0.2),
+        albu.Perspective(p=0.5),
+        albu.OneOf(
+            [
+                albu.CLAHE(clip_limit=2, tile_grid_size=(8, 8), p=0.5),
+                albu.RandomBrightnessContrast(brightness_limit=0.2, contrast_limit=0.2, p=0.5),
+                albu.RandomGamma(gamma_limit=(80, 120), p=0.5),
+                albu.HueSaturationValue(hue_shift_limit=10, sat_shift_limit=20, val_shift_limit=10, p=0.5),
+            ],
+            p=0.8,
+        ),
+        albu.OneOf(
+            [
+                albu.GaussianBlur(blur_limit=(3, 7), p=0.5),
+                albu.MedianBlur(blur_limit=3, p=0.5),
+                albu.MotionBlur(blur_limit=(3, 7), p=0.5),
+            ],
+            p=0.5,
+        ),
+        albu.OneOf(
+            [
+                albu.GaussNoise(var_limit=(10.0, 50.0), p=0.5),
+                albu.ImageCompression(quality_lower=85, quality_upper=95, p=0.5),
+            ],
+            p=0.5,
+        ),
+    ]
+    return albu.Compose(train_transform)
+```
+
+The augmentation pipeline is structured into three independently-sampled `OneOf` groups targeting distinct types of photometric variation: tone/color (CLAHE, brightness/contrast, gamma, HSV shift), blur type (Gaussian, median, motion), and signal degradation (noise, JPEG compression). This grouping reflects deliberate reasoning about the visual properties of camouflage — animals in natural settings are subject to lighting variation, camera blur, and image quality differences — and prevents augmentations from the same perceptual category from compounding on a single sample.
